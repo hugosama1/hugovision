@@ -3,6 +3,8 @@ import ReactDom from 'react-dom';
 import AppBar from 'material-ui/AppBar';
 import SimpleMap from './Map.jsx';
 import update from "react-addons-update";
+import IconButton from 'material-ui/IconButton';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
 
 export default class Main extends React.Component {
 	constructor(props) {
@@ -10,12 +12,16 @@ export default class Main extends React.Component {
 	  this.state = {
 	    markers: [{
 	      position: {
-	        lat: 25.0112183,
-	        lng: 121.52067570000001,
+	        lat: 24.806552699999997,
+	        lng: -107.39375360000001,
 	      },
-	      key: `Taiwan`,
+	      key: "culiacan",
 	      defaultAnimation: 2,
 	    }],
+      center :{
+          lat: 24.806552699999997,
+          lng: -107.39375360000001,
+        },
 	  };
 
 	  this.handleMapClick = this.handleMapClick.bind(this);
@@ -31,8 +37,8 @@ export default class Main extends React.Component {
         $push: [
           {
             position: {
-              lat: 25.99,
-              lng: 122.9,
+          lat: 25.0112183,
+          lng: 121.52067570000001
             },
             defaultAnimation: 2,
             key: Date.now(), // Add a key property for: http://fb.me/react-warning-keys
@@ -52,6 +58,7 @@ export default class Main extends React.Component {
     markers = update(markers, {
       $push: [
         {
+          icon :"http://chart.apis.google.com/chart?chst=d_map_spin&chld=1|0|FF0000|12|_|155",
           position: event.latLng,
           defaultAnimation: 2,
           key: Date.now(), // Add a key property for: http://fb.me/react-warning-keys
@@ -75,18 +82,38 @@ export default class Main extends React.Component {
     });
     this.setState({ markers });
   }
+
+  handlePositionClick() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(this.showPosition.bind(this));
+    } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+  }
+
+
+showPosition(position) {
+    this.setState({
+      center :{
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      }
+    });
+    console.log(position);
+}
+
 	render () {
 		return (
 			<div>
 	          <AppBar
 	            title="Hugo Vision"
-	            iconClassNameRight="muidocs-icon-navigation-expand-more"
+              iconElementLeft={<IconButton tooltip="Posicion Actual" onTouchTap={this.handlePositionClick.bind(this)}><NavigationClose /></IconButton>}
 	          />
 	          <SimpleMap  
 	           markers={this.state.markers}
-        	onMapClick={this.handleMapClick}
-        	onMarkerRightclick={this.handleMarkerRightclick}
-
+          	onMapClick={this.handleMapClick}
+            center={this.state.center}
+          	onMarkerRightclick={this.handleMarkerRightclick}
 	          />
 	          </div>
 		);

@@ -4,8 +4,8 @@ import ReactDom from 'react-dom';
 
 export default function SimpleMap (props) {
   return (
-    <section style={{height: "500",
-              width:"500",margin: "20"}}>
+    <section style={{height: "500px",
+              width:"500px",margin: "20px"}}>
       <GoogleMapLoader
         containerElement={
           <div
@@ -18,8 +18,9 @@ export default function SimpleMap (props) {
         googleMapElement={
           <GoogleMap
             ref={(map) => console.log(map)}
-            defaultZoom={3}
-            defaultCenter={{ lat: -25.363882, lng: 131.044922 }}
+            defaultZoom={10}
+            center={props.center}
+            defaultCenter={props.center}
             onClick={props.onMapClick}
           >
             {props.markers.map((marker, index) => {
